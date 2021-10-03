@@ -33,6 +33,11 @@ const App = () => {
       bundle: true,
       write: false,
       plugins: [unpkgPathPlugin()],
+      define: {
+        // This will replace process.env.NODE_ENV with "production" whenever it finds it
+        'process.env.NODE_ENV': '"production"',
+        global: 'window',
+      },
     });
 
     setCode(result.outputFiles[0].text);
