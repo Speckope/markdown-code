@@ -1,7 +1,7 @@
 import * as esbuild from 'esbuild-wasm';
 import { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { start } from 'repl';
+import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
 
 const App = () => {
   const ref = useRef<esbuild.Service>();
@@ -27,12 +27,15 @@ const App = () => {
       return;
     }
 
-    const result = await ref.current.transform(input, {
-      loader: 'jsx',
-      target: 'es2015',
+    const result = await ref.current.build({
+      // It says to esbuild to bundle index.js file
+      entryPoints: ['index.js'],
+      bundle: true,
+      write: false,
+      plugins: [unpkgPathPlugin()],
     });
 
-    setCode(result.code);
+    setCode(result.outputFiles[0].text);
   };
 
   return (
