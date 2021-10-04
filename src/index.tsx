@@ -15,7 +15,7 @@ const App = () => {
     // Or we can crate a ref! We can use refe not only to html elements.
     ref.current = await esbuild.startService({
       worker: true,
-      wasmURL: '/esbuild.wasm',
+      wasmURL: 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm',
     });
   };
 
