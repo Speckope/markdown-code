@@ -6,8 +6,8 @@ import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
 
 const App = () => {
   const ref = useRef<esbuild.Service>();
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [input, setInput] = useState('');
-  const [code, setCode] = useState('');
 
   const startService = async () => {
     // To use this service object outside of this function we can
@@ -28,6 +28,8 @@ const App = () => {
       return;
     }
 
+    iframeRef.current!.srcdoc = html;
+
     const result = await ref.current.build({
       // It says to esbuild to bundle index.js file
       entryPoints: ['index.js'],
@@ -42,8 +44,32 @@ const App = () => {
       },
     });
 
-    setCode(result.outputFiles[0].text);
+    // setCode(result.outputFiles[0].text);
+    iframeRef.current?.contentWindow?.postMessage(
+      result.outputFiles[0].text,
+      '*'
+    );
   };
+
+  const html = `
+    <html> 
+      <head></head>
+      <body>
+        <div id="root"></div>
+        <script>
+          window.addEventListener('message', e => { 
+            try {
+              eval(e.data);
+            } catch (err) {
+              const root = document.querySelector('#root');
+              root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err +  '</div>'
+              console.error(err);
+            }
+          }, false);
+        </script>
+      </body>
+    </html>
+  `;
 
   return (
     <div>
@@ -54,7 +80,12 @@ const App = () => {
       <div>
         <button onClick={onCLick}>Submit</button>
       </div>
-      <pre>{code}</pre>
+      <iframe
+        ref={iframeRef}
+        sandbox='allow-scripts'
+        title='test'
+        srcDoc={html}
+      ></iframe>
     </div>
   );
 };
