@@ -1,6 +1,7 @@
 import * as esbuild from 'esbuild-wasm';
 import { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
+import { fetchPlugin } from './plugins/fetch-plugin';
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
 
 const App = () => {
@@ -32,7 +33,8 @@ const App = () => {
       entryPoints: ['index.js'],
       bundle: true,
       write: false,
-      plugins: [unpkgPathPlugin()],
+      // We pass input into our plugin!
+      plugins: [unpkgPathPlugin(), fetchPlugin(input)],
       define: {
         // This will replace process.env.NODE_ENV with "production" whenever it finds it
         'process.env.NODE_ENV': '"production"',
