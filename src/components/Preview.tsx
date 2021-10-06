@@ -1,3 +1,4 @@
+import './Preview.css';
 import React, { useEffect, useRef } from 'react';
 
 interface PreviewProps {
@@ -27,20 +28,26 @@ const html = `
 const Preview: React.FC<PreviewProps> = ({ code }) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
-  // Push new html file every time code is updated.
   useEffect(() => {
     iframeRef.current!.srcdoc = html;
-    // setCode(result.outputFiles[0].text);
-    iframeRef.current?.contentWindow?.postMessage(code, '*');
+
+    // setTimeout is neccesary to give time to the new html document to set up event listener.
+    // Without it, we post message to the previous html document and we end up with new, blank
+    // html when it gets updated from the code above!
+    setTimeout(() => {
+      iframeRef.current?.contentWindow?.postMessage(code, '*');
+    }, 50);
   }, [code]);
 
   return (
-    <iframe
-      ref={iframeRef}
-      sandbox='allow-scripts'
-      title='test'
-      srcDoc={html}
-    />
+    <div className='preview-wrapper'>
+      <iframe
+        ref={iframeRef}
+        sandbox='allow-scripts'
+        title='test'
+        srcDoc={html}
+      />
+    </div>
   );
 };
 
