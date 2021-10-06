@@ -10,13 +10,15 @@ interface CodeCellProps {}
 
 const CodeCell: React.FC<CodeCellProps> = () => {
   const [code, setCode] = useState('');
+  const [err, setErr] = useState('');
   const [input, setInput] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(async () => {
       const output = await bundleFunction(input);
 
-      setCode(output);
+      setCode(output.code);
+      setErr(output.error);
     }, 1000);
 
     return () => {
@@ -39,7 +41,7 @@ const CodeCell: React.FC<CodeCellProps> = () => {
             onChange={(value) => setInput(value)}
           />
         </ResizableComponent>
-        <Preview code={code} />
+        <Preview err={err} code={code} />
       </div>
     </ResizableComponent>
   );

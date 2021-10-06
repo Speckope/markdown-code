@@ -11,6 +11,14 @@
   overflow: hidden;
 }
 
+.preview-error {
+  position: absolute;
+  color: red;
+  top: 10px;
+  left: 10px;
+  z-index: 30;
+}
+
 .react-draggable-transparent-selection .preview-wrapper:after {
   content: '';
   position: absolute;

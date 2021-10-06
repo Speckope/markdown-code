@@ -48,21 +48,25 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
       const unformatted = editorRef.current?.getModel()?.getValue();
       // Parse it with prettier
       if (unformatted) {
-        const formated = prettier
-          .format(unformatted, {
-            parser: 'babel',
-            plugins: [parser],
-            useTabs: false,
-            // adds semicolons
-            semi: true,
-            // Uses single quotes whenever possible
-            singleQuote: true,
-            //replace new line character at the end with  an empty string. (prettier always adds one line)
-          })
-          .replace(/\n$/, '');
+        try {
+          const formated = prettier
+            .format(unformatted, {
+              parser: 'babel',
+              plugins: [parser],
+              useTabs: false,
+              // adds semicolons
+              semi: true,
+              // Uses single quotes whenever possible
+              singleQuote: true,
+              //replace new line character at the end with  an empty string. (prettier always adds one line)
+            })
+            .replace(/\n$/, '');
 
-        // Set formatted value to the editor
-        editorRef.current?.setValue(formated);
+          // Set formatted value to the editor
+          editorRef.current?.setValue(formated);
+        } catch (err) {
+          console.log(err);
+        }
       }
     };
 

@@ -15,23 +15,33 @@ const bundleFunction = async (rawCode: string) => {
     });
   }
 
-  // Run the bundle
-  const result = await service.build({
-    // It says to esbuild to bundle index.js file
-    entryPoints: ['index.js'],
-    bundle: true,
-    write: false,
-    // We pass input into our plugin!
-    plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
-    define: {
-      // This will replace process.env.NODE_ENV with "production" whenever it finds it
-      'process.env.NODE_ENV': '"production"',
-      global: 'window',
-    },
-  });
+  try {
+    // Run the bundle
+    const result = await service.build({
+      // It says to esbuild to bundle index.js file
+      entryPoints: ['index.js'],
+      bundle: true,
+      write: false,
+      // We pass input into our plugin!
+      plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
+      define: {
+        // This will replace process.env.NODE_ENV with "production" whenever it finds it
+        'process.env.NODE_ENV': '"production"',
+        global: 'window',
+      },
+    });
+    return {
+      code: result.outputFiles[0].text,
+      error: '',
+    };
+  } catch (error: any) {
+    return {
+      code: '',
+      error: error.message,
+    };
+  }
 
   // Send back bundled code
-  return result.outputFiles[0].text;
 };
 
 export default bundleFunction;
