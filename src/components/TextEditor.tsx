@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 
 interface TextEditorProps {}
 
-const TextEditor: React.FC<TextEditorProps> = ({}) => {
+const TextEditor: React.FC<TextEditorProps> = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState('# Header');
