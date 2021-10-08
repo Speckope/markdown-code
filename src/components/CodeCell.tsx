@@ -5,17 +5,22 @@ import bundleFunction from '../bundler';
 import CodeEditor from './CodeEditor';
 import Preview from './Preview';
 import ResizableComponent from './ResizableComponent';
+import { Cell } from '../state';
+import { useActions } from './hooks/useActions';
 
-interface CodeCellProps {}
+interface CodeCellProps {
+  cell: Cell;
+}
 
-const CodeCell: React.FC<CodeCellProps> = () => {
+const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
+  const { updateCell } = useActions();
+
   const [code, setCode] = useState('');
   const [err, setErr] = useState('');
-  const [input, setInput] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(async () => {
-      const output = await bundleFunction(input);
+      const output = await bundleFunction(cell.content);
 
       setCode(output.code);
       setErr(output.error);
@@ -24,7 +29,7 @@ const CodeCell: React.FC<CodeCellProps> = () => {
     return () => {
       clearTimeout(timer);
     };
-  }, [input]);
+  }, [cell.content]);
 
   return (
     <ResizableComponent direction='vertical'>
@@ -37,8 +42,8 @@ const CodeCell: React.FC<CodeCellProps> = () => {
       >
         <ResizableComponent direction='horizontal'>
           <CodeEditor
-            initialValue='// Start Typing'
-            onChange={(value) => setInput(value)}
+            initialValue={cell.content}
+            onChange={(value) => updateCell(cell.id, value)}
           />
         </ResizableComponent>
         <Preview err={err} code={code} />

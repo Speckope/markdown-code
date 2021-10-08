@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { Cell } from '../../cell';
+import { Cell } from '../cell';
 import { ActionType } from '../action-types';
 import { Action } from '../actions';
 
@@ -77,7 +77,7 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
     default:
       return state;
   }
-});
+}, initialState);
 
 const randomId = () => {
   // Generate random number, convert to string with base36, take only a portion of it.

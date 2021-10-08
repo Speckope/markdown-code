@@ -1,4 +1,4 @@
-import { Cell } from '../../cell';
+import { Cell } from '../cell';
 import { ActionType } from '../action-types';
 
 export type Direction = 'up' | 'down';

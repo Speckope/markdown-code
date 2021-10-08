@@ -1,13 +1,18 @@
 import './TextEditor.css';
 import MDEditor from '@uiw/react-md-editor';
 import React, { useEffect, useState, useRef } from 'react';
+import { Cell } from '../state';
+import { useActions } from './hooks/useActions';
 
-interface TextEditorProps {}
+interface TextEditorProps {
+  cell: Cell;
+}
 
-const TextEditor: React.FC<TextEditorProps> = () => {
+const TextEditor: React.FC<TextEditorProps> = ({ cell }) => {
+  const { updateCell } = useActions();
+
   const ref = useRef<HTMLDivElement | null>(null);
   const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState('# Header');
 
   useEffect(() => {
     const listener = (event: MouseEvent) => {
@@ -17,11 +22,8 @@ const TextEditor: React.FC<TextEditorProps> = () => {
         event.target &&
         ref.current.contains(event.target as Node)
       ) {
-        console.log('Clicked element is inside the editor');
         return;
       }
-
-      console.log('Not inside.');
 
       setEditing(false);
     };
@@ -40,7 +42,10 @@ const TextEditor: React.FC<TextEditorProps> = () => {
     return (
       <div className='text-editor card' ref={ref}>
         {/* v || '' means that if v is undefines, setValue to empty string */}
-        <MDEditor value={value} onChange={(v) => setValue(v || '')} />
+        <MDEditor
+          value={cell.content}
+          onChange={(value) => updateCell(cell.id, value || '')}
+        />
       </div>
     );
   }
@@ -49,7 +54,7 @@ const TextEditor: React.FC<TextEditorProps> = () => {
     // card and card-content come from bulma
     <div className='text-editor card' onClick={() => setEditing(true)}>
       <div className='card-content'>
-        <MDEditor.Markdown source={value} />
+        <MDEditor.Markdown source={cell.content || 'Click to edit'} />
       </div>
     </div>
   );
