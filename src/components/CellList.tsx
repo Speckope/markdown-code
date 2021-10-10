@@ -1,10 +1,11 @@
 import React from 'react';
+import AddCell from './AddCell';
 import CellListItem from './CellListItem';
 import { useTypedSelector } from './hooks/useTypedSelector';
 
 interface CellListProps {}
 
-const CellList: React.FC<CellListProps> = ({}) => {
+const CellList: React.FC<CellListProps> = () => {
   // Extract oreder, data from cells and return cells in order!
   //   useTypedSelector(({ cells: { order, data } }) => {
   //     return order.map((id) => {
@@ -16,10 +17,18 @@ const CellList: React.FC<CellListProps> = ({}) => {
   );
 
   const renderedCells = cells.map((cell) => (
-    <CellListItem key={cell.id} cell={cell} />
+    <React.Fragment key={cell.id}>
+      <CellListItem cell={cell} />
+      <AddCell previousCellId={cell.id} />
+    </React.Fragment>
   ));
 
-  return <div>{renderedCells}</div>;
+  return (
+    <div>
+      <AddCell forceVisible={cells.length === 0} previousCellId={null} />
+      {renderedCells}
+    </div>
+  );
 };
 
 export default CellList;
