@@ -29,6 +29,10 @@ const bundleFunction = async (rawCode: string) => {
         'process.env.NODE_ENV': '"production"',
         global: 'window',
       },
+      // This changes the default and is needed, to we can make our show() with react imports
+      // And ensures that user can also import React
+      jsxFactory: '_React.createElement',
+      jsxFragment: '_React.Fragment',
     });
     return {
       code: result.outputFiles[0].text,

@@ -7,6 +7,7 @@ import ResizableComponent from './ResizableComponent';
 import { Cell } from '../state';
 import { useActions } from './hooks/useActions';
 import { useTypedSelector } from './hooks/useTypedSelector';
+import { useCumulativeCode } from './hooks/useCumulativeCode';
 
 interface CodeCellProps {
   cell: Cell;
@@ -18,15 +19,18 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   // We take bundleId
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
 
+  // Joining code from cells
+  const cumulativeCode = useCumulativeCode(cell.id);
+
   useEffect(() => {
     // This will eliminate initial flash in iframe.
     if (!bundle) {
-      createBundle(cell.id, cell.content);
+      createBundle(cell.id, cumulativeCode);
       return;
     }
 
     const timer = setTimeout(async () => {
-      createBundle(cell.id, cell.content);
+      createBundle(cell.id, cumulativeCode);
     }, 750);
 
     return () => {
@@ -34,7 +38,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     };
     // We don't want to put in bundle in dependencies, or we will enter an infinite loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cell.content, cell.id, createBundle]);
+  }, [cumulativeCode, cell.id, createBundle]);
 
   return (
     <ResizableComponent direction='vertical'>
