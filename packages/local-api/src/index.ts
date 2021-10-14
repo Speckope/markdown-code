@@ -36,7 +36,9 @@ export const serve = (
   } else {
     // This is required, becouse with lerna a symlink is created to our package, and
     // express.static doesn't resolve symlinks
-    const packagePath = require.resolve('local-client/build/index.html');
+    const packagePath = require.resolve(
+      '@markdown-code/local-client/build/index.html'
+    );
     app.use(express.static(path.dirname(packagePath)));
   }
 
