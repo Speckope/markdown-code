@@ -49,10 +49,36 @@ export interface BundleCompleteAction {
   };
 }
 
+// FETCHING CELLS
+
+export interface FetchCellsAction {
+  type: ActionType.FETCH_CELLS;
+}
+
+export interface FetchCellsActionComplete {
+  type: ActionType.FETCH_CELLS_COMPLETE;
+  payload: Cell[];
+}
+
+export interface FetchCellsActionError {
+  type: ActionType.FETCH_CELLS_ERROR;
+  payload: string;
+}
+
+// SAVING CELLS
+export interface SaveCellsErrorAction {
+  type: ActionType.SAVE_CELLS_ERROR;
+  payload: string;
+}
+
 export type Action =
   | MoveCellAction
   | DeleteCellAction
   | InsertCellAfterAction
   | UpdateCellAction
   | BundleStartAction
-  | BundleCompleteAction;
+  | BundleCompleteAction
+  | FetchCellsAction
+  | FetchCellsActionComplete
+  | FetchCellsActionError
+  | SaveCellsErrorAction;

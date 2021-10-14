@@ -75,6 +75,38 @@ const cellReducer = produce(
 
         return state;
 
+      // ACTIONS FOR FETCHING
+      case ActionType.FETCH_CELLS:
+        state.loading = true;
+        // set error to null. It's useful if there was some error with previous fetching
+        state.error = null;
+        return state;
+
+      case ActionType.FETCH_CELLS_COMPLETE:
+        state.loading = false;
+        // Get correct order of cells.
+        state.order = action.payload.map((cell) => cell.id);
+        // Iterate over every value in an array with reduce and add id to it.
+        // We make new object, creating inside pair with cell.id as key,
+        // then setting value as cell.
+        // Reduce then returns it and we add next cell to it until array is done.
+        state.data = action.payload.reduce((acc, cell) => {
+          acc[cell.id] = cell;
+          return acc;
+          // Tell TS what type of object it is, othwerwise we get an error (type assertion)
+        }, {} as CellsState['data']);
+
+        return state;
+
+      case ActionType.FETCH_CELLS_ERROR:
+        state.loading = false;
+        state.error = action.payload;
+        return state;
+
+      case ActionType.SAVE_CELLS_ERROR:
+        state.error = action.payload;
+        return state;
+
       default:
         return state;
     }

@@ -14,7 +14,7 @@ export const createCellsRouter = (filename: string, dir: string) => {
   const router = express.Router();
 
   // body parsing middleware
-  router.use(express.json);
+  router.use(express.json());
 
   const fullPath = path.join(dir, filename);
 
@@ -23,13 +23,13 @@ export const createCellsRouter = (filename: string, dir: string) => {
       // Read the file
       const result = await fs.readFile(fullPath, { encoding: 'utf8' });
       // Parse a list of cells out of the file and send list of cells back to the browser
-      res.send(JSON.parse(result));
+      res.status(200).send(JSON.parse(result));
     } catch (err: any) {
       // ENOENT mneans the file doesn't exist. (error no entity)
       if (err.code === 'ENOENT') {
         // Create a file and add default cells
         await fs.writeFile(fullPath, '[]', 'utf8');
-        res.send([]);
+        res.status(200).send([]);
       } else {
         throw err;
       }

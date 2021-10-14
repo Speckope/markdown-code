@@ -1,8 +1,9 @@
 import './CellList.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import AddCell from './AddCell';
 import CellListItem from './CellListItem';
 import { useTypedSelector } from './hooks/useTypedSelector';
+import { useActions } from './hooks/useActions';
 
 interface CellListProps {}
 
@@ -13,9 +14,15 @@ const CellList: React.FC<CellListProps> = () => {
   //       return data[id];
   //     });
   //   });
+  // Same as above but without returns
   const cells = useTypedSelector(({ cells: { order, data } }) =>
     order.map((id) => data[id])
   );
+
+  const { fetchCells } = useActions();
+  useEffect(() => {
+    fetchCells();
+  }, []);
 
   const renderedCells = cells.map((cell) => (
     <React.Fragment key={cell.id}>

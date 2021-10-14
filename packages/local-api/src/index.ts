@@ -11,6 +11,10 @@ export const serve = (
 ) => {
   const app = express();
 
+  // This comes first, because we want to attempt making use of route handlers
+  // before we use our proxy middleware
+  app.use(createCellsRouter(filename, dir));
+
   if (useProxy) {
     // Redirect requests that are not about getting posting files to react.
     // Now when we go to localhost our serve is running on we get react app!
@@ -35,8 +39,6 @@ export const serve = (
     const packagePath = require.resolve('local-client/build/index.html');
     app.use(express.static(path.dirname(packagePath)));
   }
-
-  app.use(createCellsRouter(filename, __dirname));
 
   // We pass resolve as a callback function, then listen to the error and rejec if
   // it's emitted

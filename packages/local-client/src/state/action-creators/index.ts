@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import axios from 'axios';
 import bundleFunction from '../../bundler';
 import { ActionType } from '../action-types';
 import {
@@ -10,6 +11,7 @@ import {
   UpdateCellAction,
 } from '../actions';
 import { Cell } from '../cell';
+import { RootState } from '..';
 
 // Cells actionCreators
 export const updateCell = (id: string, content: string): UpdateCellAction => {
@@ -51,6 +53,55 @@ export const insertCellAter = (
       id,
       type,
     },
+  };
+};
+
+// FETCHING CELLS
+
+export const fetchCells = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    // Dispatch to indicate we begin fetching. It's purpose is to turn loading to true
+    dispatch({
+      type: ActionType.FETCH_CELLS,
+    });
+
+    try {
+      const { data }: { data: Cell[] } = await axios.get('/cells');
+
+      dispatch({
+        type: ActionType.FETCH_CELLS_COMPLETE,
+        payload: data,
+      });
+    } catch (err: any) {
+      dispatch({
+        type: ActionType.FETCH_CELLS_ERROR,
+        payload: err.message,
+      });
+    }
+  };
+};
+
+// SAVING CELLS
+
+export const saveCells = () => {
+  // We get access to getState with thunk
+  return async (dispatch: Dispatch<Action>, getState: () => RootState) => {
+    const {
+      cells: { data, order },
+    } = getState();
+
+    // Get cells in order
+    const cells = order.map((id) => data[id]);
+
+    try {
+      // Post object with cells
+      await axios.post('/cells', { cells });
+    } catch (err: any) {
+      dispatch({
+        type: ActionType.SAVE_CELLS_ERROR,
+        payload: err.message,
+      });
+    }
   };
 };
 
