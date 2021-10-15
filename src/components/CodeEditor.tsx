@@ -28,6 +28,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     monacoEditor.getModel()?.updateOptions({ tabSize: 2 });
 
     const highlighter = new Highlighter(
+      // monaco gets written to window, but ts doesn't know this
       // @ts-ignore
       window.monaco,
       codeShift,

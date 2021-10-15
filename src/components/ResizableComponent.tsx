@@ -18,7 +18,7 @@ const ResizableComponent: React.FC<ResizableComponentProps> = ({
 
   useEffect(() => {
     // THIS IS DEBOUNCING
-    let timer: any;
+    let timer: NodeJS.Timeout;
     const listener = () => {
       // If timer is defined, clearTimeout
       if (timer) {
