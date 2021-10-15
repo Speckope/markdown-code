@@ -7,6 +7,7 @@ import {
   Direction,
   InsertCellAfterAction,
   MoveCellAction,
+  ToggleSharedEnvironmentCellAction,
   UpdateCellAction,
 } from '../actions';
 import { Cell } from '../cell';
@@ -50,6 +51,17 @@ export const insertCellAter = (
     payload: {
       id,
       type,
+    },
+  };
+};
+
+export const toggleSharedEnvironmentCell = (
+  id: string
+): ToggleSharedEnvironmentCellAction => {
+  return {
+    type: ActionType.TOGGLE_SHARED_ENVIRONEMNT_CELL,
+    payload: {
+      id,
     },
   };
 };

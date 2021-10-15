@@ -34,6 +34,13 @@ export interface UpdateCellAction {
   };
 }
 
+export interface ToggleSharedEnvironmentCellAction {
+  type: ActionType.TOGGLE_SHARED_ENVIRONEMNT_CELL;
+  payload: {
+    id: string;
+  };
+}
+
 export interface BundleStartAction {
   type: ActionType.BUNDLE_START;
   payload: {
@@ -55,4 +62,5 @@ export type Action =
   | InsertCellAfterAction
   | UpdateCellAction
   | BundleStartAction
-  | BundleCompleteAction;
+  | BundleCompleteAction
+  | ToggleSharedEnvironmentCellAction;

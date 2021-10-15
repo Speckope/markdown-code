@@ -52,11 +52,13 @@ const cellReducer = produce(
         state.order[targetIndex] = action.payload.id;
 
         return state;
+
       case ActionType.INSERT_CELL_AFTER:
         const cell: Cell = {
           content: '',
           type: action.payload.type,
           id: randomId(),
+          sharedEnvironment: true,
         };
 
         state.data[cell.id] = cell;
@@ -72,6 +74,12 @@ const cellReducer = produce(
           // Insert new id into cell
           state.order.splice(foundIndex + 1, 0, cell.id);
         }
+        return state;
+
+      case ActionType.TOGGLE_SHARED_ENVIRONEMNT_CELL:
+        // Toggle it
+        state.data[action.payload.id].sharedEnvironment =
+          !state.data[action.payload.id].sharedEnvironment;
 
         return state;
 
