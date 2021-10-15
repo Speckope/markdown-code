@@ -1,7 +1,7 @@
 .add-cell {
   position: relative;
   opacity: 0;
-  transition: opacity 0.3s ease-in 0.1s;
+  transition: opacity 0.2s ease-in 0.1s;
   margin: 10px 0;
 }
 
@@ -18,6 +18,19 @@
   border-bottom: 1px solid gray;
   width: 95%;
   z-index: -1;
+}
+
+.add-cell:hover .divider {
+  animation: growFromCenter 0.5s;
+}
+
+@keyframes growFromCenter {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 .add-cell.force-visible {
