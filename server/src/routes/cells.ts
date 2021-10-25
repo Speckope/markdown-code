@@ -61,7 +61,7 @@ router.delete('/cells', async (req, res) => {
 });
 
 // GETTING ALL CELLS
-router.get('/cells', async (req, res) => {
+router.get('/cells', async (_req, res) => {
   try {
     const cellRepository = getMongoManager().getRepository(Cell);
 
