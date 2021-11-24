@@ -75,9 +75,9 @@ const main = async () => {
   // this is called after successful login
   app.get(
     '/auth/github/callback',
-    // TODO failureRedirect
+    // On fail redirect to client with fail
     passport.authenticate('github', {
-      failureRedirect: '/login',
+      failureRedirect: 'http://localhost:3000/auth/failure',
       session: false,
     }),
     function (req: any, res) {
