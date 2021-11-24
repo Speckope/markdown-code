@@ -87,3 +87,10 @@ export const createBundle = (cellId: string, input: string) => {
     });
   };
 };
+
+export const login = (userId: string, userName: string) => {
+  return async (dispatch: Dispatch<Action>) => {
+    // Send request to the server with user data
+    // Save recieved accessToken and load cells
+  };
+};

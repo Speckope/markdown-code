@@ -18,14 +18,16 @@ const main = async () => {
     entities: [join(__dirname, './entities/*.*')],
     useUnifiedTopology: true,
   }).catch((err) => console.log(err));
-  if (!connection) throw Error('No connection');
+  if (!connection) throw Error('No connection!');
 
   console.log('Is connected: ' + connection.isConnected);
 
+  // Serialize user
   passport.serializeUser(function (user: any, done) {
     done(null, user.accessToken);
   });
 
+  // Passport middleware
   passport.use(
     new GitHubStrategy(
       {
@@ -40,19 +42,19 @@ const main = async () => {
         done: any
       ) => {
         const manager = getMongoManager();
-        console.log('Ayaya1');
         let user = await manager.findOne(User, { githubId: profile.id });
-        console.log('Ayaya2');
+        // If user exists, update his displayName
         if (user) {
           user.name = profile.displayName;
           await manager.save(User, user);
         } else {
+          // If user does not exist, create a user.
           user = new User();
           user.name = profile.displayName;
           user.githubId = profile.id;
           await manager.save(user);
         }
-        console.log(profile);
+        // Create a new accessToken on success
         done(null, {
           accessToken: jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
             expiresIn: '1y',
@@ -61,6 +63,7 @@ const main = async () => {
       }
     )
   );
+
   const app = express();
   app.use(express.json());
 
@@ -78,6 +81,7 @@ const main = async () => {
       session: false,
     }),
     function (req: any, res) {
+      console.log(req);
       // It will be an object with jwt accessToken
       res.redirect(`http://localhost:3000/auth/${req.user.accessToken}`);
     }
@@ -95,11 +99,3 @@ const main = async () => {
 };
 
 main();
-
-// const codeCell = new Cell();
-// codeCell.content = 'console.log(1)';
-// codeCell.type = 'text';
-// codeCell.sharedEnvironment = true;
-// // Save
-// const manager = getMongoManager();
-// await manager.save(codeCell);
