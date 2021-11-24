@@ -82,8 +82,9 @@ const main = async () => {
     }),
     function (req: any, res) {
       console.log(req);
-      // It will be an object with jwt accessToken
-      res.redirect(`http://localhost:3000/auth/${req.user.accessToken}`);
+      // Send back cookie with an accessToken!
+      res.cookie('jida', req.user.accessToken);
+      res.redirect(`http://localhost:3000/auth/success`);
     }
   );
 
