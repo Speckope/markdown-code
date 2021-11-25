@@ -87,7 +87,10 @@ const main = async () => {
     }),
     function (req: any, res) {
       // Send back cookie with an accessToken!
-      res.cookie('jida', req.user.accessToken, {});
+      res.cookie('jida', req.user.accessToken, {
+        // 1 year
+        maxAge: 1000 * 60 * 60 * 24 * 360,
+      });
       res.redirect(`http://localhost:3000/auth/success`);
     }
   );
