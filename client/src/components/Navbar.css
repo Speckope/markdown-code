@@ -3,8 +3,10 @@
   height: 40px;
 
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
+  gap: 15px;
+
   padding: 10px 20px;
 }
 
