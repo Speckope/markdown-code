@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import jwtDecode from 'jwt-decode';
 import bundleFunction from '../../bundler';
 import { ActionType } from '../action-types';
 import {
@@ -11,6 +12,7 @@ import {
   UpdateCellAction,
 } from '../actions';
 import { Cell } from '../cell';
+import { CustomJwtPayload } from '../../types/JwtPayload';
 
 // Cells actionCreators
 export const updateCell = (id: string, content: string): UpdateCellAction => {
@@ -88,9 +90,34 @@ export const createBundle = (cellId: string, input: string) => {
   };
 };
 
-export const login = (userId: string, userName: string) => {
+export const login = (accessToken: string) => {
   return async (dispatch: Dispatch<Action>) => {
-    // Send request to the server with user data
-    // Save recieved accessToken and load cells
+    // Decode jwt token
+
+    // If no accessToken is found, dispatch failure
+    if (!accessToken) {
+      console.log('no AC or expired');
+      dispatch({
+        type: ActionType.LOGIN_FAILURE,
+        payload: {
+          accessToken: '',
+          userId: '',
+          userName: '',
+        },
+      });
+
+      return;
+    }
+    const { userId, userName } = jwtDecode<CustomJwtPayload>(accessToken);
+
+    // Dispatch action with user data
+    dispatch({
+      type: ActionType.LOGIN_SUCCESS,
+      payload: {
+        accessToken: accessToken,
+        userId,
+        userName,
+      },
+    });
   };
 };

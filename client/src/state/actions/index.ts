@@ -56,6 +56,23 @@ export interface BundleCompleteAction {
   };
 }
 
+export interface LoginSuccessAction {
+  type: ActionType.LOGIN_SUCCESS;
+  payload: {
+    accessToken: string;
+    userId: string;
+    userName: string;
+  };
+}
+
+export interface LoginFailureAction {
+  type: ActionType.LOGIN_FAILURE;
+  payload: {
+    userId: string;
+    userName: string;
+  };
+}
+
 export type Action =
   | MoveCellAction
   | DeleteCellAction
@@ -63,4 +80,6 @@ export type Action =
   | UpdateCellAction
   | BundleStartAction
   | BundleCompleteAction
-  | ToggleSharedEnvironmentCellAction;
+  | ToggleSharedEnvironmentCellAction
+  | LoginSuccessAction
+  | LoginFailureAction;
