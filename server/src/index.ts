@@ -45,20 +45,25 @@ const main = async () => {
         let user = await manager.findOne(User, { githubId: profile.id });
         // If user exists, update his displayName
         if (user) {
-          user.name = profile.displayName;
+          // Display name, or if undefined, username
+          user.name = profile.displayName || profile.username;
           await manager.save(User, user);
         } else {
           // If user does not exist, create a user.
           user = new User();
-          user.name = profile.displayName;
+          user.name = profile.login;
           user.githubId = profile.id;
           await manager.save(user);
         }
         // Create a new accessToken on success
         done(null, {
-          accessToken: jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-            expiresIn: '1y',
-          }),
+          accessToken: jwt.sign(
+            { userId: user.id, userName: user.name },
+            process.env.JWT_SECRET,
+            {
+              expiresIn: '1y',
+            }
+          ),
         });
       }
     )
@@ -81,9 +86,8 @@ const main = async () => {
       session: false,
     }),
     function (req: any, res) {
-      console.log(req);
       // Send back cookie with an accessToken!
-      res.cookie('jida', req.user.accessToken);
+      res.cookie('jida', req.user.accessToken, {});
       res.redirect(`http://localhost:3000/auth/success`);
     }
   );
